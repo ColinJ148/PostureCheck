@@ -1,16 +1,12 @@
 package com.example.posturecheck;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,6 +14,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -34,17 +33,51 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         final Spinner spinner = findViewById(R.id.spinner);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
-        Button startBtn = findViewById(R.id.start_btn);
-        /*TODO Start timer when start button is pressed and then send notifications based off interval spinner*/
+        final Button startBtn = findViewById(R.id.start_btn);
+
 
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String interval = spinner.getSelectedItem().toString();
+                startPostureChecking(spinner);
                 Log.i("button", "button pressed");
-                showNotification("Posture Check!", "Roll your shoulders back and sit straight up!");
             }
         });
+    }
+
+
+    void startPostureChecking(final Spinner spinner) {
+        long intervalLength = 0;
+        String interval = spinner.getSelectedItem().toString();
+        switch (interval) {
+            case "15 Minutes":
+                intervalLength = 900000;
+                break;
+            case "30 Minutes":
+                intervalLength = 1800000;
+                break;
+            case "1 Hour":
+                intervalLength = 3600000;
+                break;
+        }
+
+
+        CountDownTimer countDownTimer = new CountDownTimer(intervalLength, 1000) {
+            @Override
+            public void onTick(long l) {
+                // Log.i("timer", Long.toString(l));
+            }
+
+            @Override
+            public void onFinish() {
+                /*TODO Add variety of random different messages*/
+                showNotification("Posture Check!", "Roll your shoulders back and sit straight up!");
+                startPostureChecking(spinner);
+            }
+        };
+
+        countDownTimer.start();
+        /*TODO Figure out how to only have one timer going at once*/
     }
 
 
