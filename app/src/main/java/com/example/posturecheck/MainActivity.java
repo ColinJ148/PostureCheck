@@ -13,45 +13,50 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 
+import java.util.Random;
+
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+    final String[] messages = {"Place your ankles in front of the knees", "Get up and have a " +
+            "quick stretch!", "Keep your elbows in close to your body!", "Roll your shoulders " +
+            "back and sit straight up!"};
+    Random rng = new Random();
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource
                 (this, R.array.intervals, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         final Spinner spinner = findViewById(R.id.spinner);
+        final Button startBtn = findViewById(R.id.start_btn);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
-        final Button startBtn = findViewById(R.id.start_btn);
-
-
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startPostureChecking(spinner);
                 Log.i("button", "button pressed");
+                showNotification("PostureCheck", "Posture checking has begun!");
             }
         });
     }
 
-
+    /*Called to start posture checking whenever the start button is pressed. Checks time interval
+     from spinner and sends random notifications based on interval time.
+     */
     void startPostureChecking(final Spinner spinner) {
         long intervalLength = 0;
         String interval = spinner.getSelectedItem().toString();
         switch (interval) {
             case "15 Minutes":
-                intervalLength = 900000;
+                intervalLength = 10000;
                 break;
             case "30 Minutes":
                 intervalLength = 1800000;
@@ -61,7 +66,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 break;
         }
 
-
         CountDownTimer countDownTimer = new CountDownTimer(intervalLength, 1000) {
             @Override
             public void onTick(long l) {
@@ -70,17 +74,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             @Override
             public void onFinish() {
-                /*TODO Add variety of random different messages*/
-                showNotification("Posture Check!", "Roll your shoulders back and sit straight up!");
+                int randomMessage = rng.nextInt(messages.length - 1);
+                showNotification("Posture Check!", messages[randomMessage]);
                 startPostureChecking(spinner);
             }
         };
-
         countDownTimer.start();
-        /*TODO Figure out how to only have one timer going at once*/
     }
 
-
+    /*Builds and shows notification to user. Takes in notification title and message as parameters*/
     void showNotification(String title, String message) {
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -108,7 +110,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         String text = adapterView.getItemAtPosition(i).toString();
-        Toast.makeText(adapterView.getContext(), text, Toast.LENGTH_SHORT).show();
     }
 
     @Override
