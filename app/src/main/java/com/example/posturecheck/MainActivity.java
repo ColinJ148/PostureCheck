@@ -21,10 +21,12 @@ import java.util.Random;
 
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-    final String[] messages = {"Place your ankles in front of the knees", "Get up and have a " +
+    private final String[] messages = {"Place your ankles in front of the knees", "Get up and " +
+            "have a " +
             "quick stretch!", "Keep your elbows in close to your body!", "Roll your shoulders " +
             "back and sit straight up!"};
-    Random rng = new Random();
+    private Random rng = new Random();
+
 
 
     @Override
@@ -36,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         final Spinner spinner = findViewById(R.id.spinner);
         final Button startBtn = findViewById(R.id.start_btn);
+        Button todoListLaunchBtn = (Button) findViewById(R.id.toDoListBtn);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
         startBtn.setOnClickListener(new View.OnClickListener() {
@@ -43,7 +46,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onClick(View view) {
                 startPostureChecking(spinner);
                 Log.i("button", "button pressed");
-                showNotification("PostureCheck", "Posture checking has begun!");
+                showNotification("You've started working!", "This app will remind you to maintain" +
+                        " good digital healthy habits");
+            }
+        });
+        todoListLaunchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, TodoListActivity.class));
             }
         });
     }
@@ -56,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         String interval = spinner.getSelectedItem().toString();
         switch (interval) {
             case "15 Minutes":
-                intervalLength = 10000;
+                intervalLength = 900000;
                 break;
             case "30 Minutes":
                 intervalLength = 1800000;
