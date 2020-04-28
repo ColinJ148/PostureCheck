@@ -28,19 +28,22 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private Random rng = new Random();
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource
                 (this, R.array.intervals, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         final Spinner spinner = findViewById(R.id.spinner);
         final Button startBtn = findViewById(R.id.start_btn);
+        final Button musicBtn = findViewById(R.id.musicBtn);
+        Button motivationBtn = findViewById(R.id.motivationBtn);
         Button todoListLaunchBtn = (Button) findViewById(R.id.toDoListBtn);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
+
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -54,6 +57,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, TodoListActivity.class));
+            }
+        });
+        musicBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, MusicActivity.class));
+            }
+        });
+        motivationBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, MotivationActivity.class));
             }
         });
     }

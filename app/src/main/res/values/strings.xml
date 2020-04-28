@@ -8,6 +8,7 @@
     <string name="addBtn">Add</string>
     <string name="title">Title</string>
     <string name="content">content</string>
+    <string name="musicBtn">Music</string>
     <string-array name="intervals">
         <item>15 Minutes</item>
         <item>30 Minutes</item>
